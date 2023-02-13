@@ -4,13 +4,10 @@ package handler
 
 import (
 	"context"
-
-	//"go_tiktok_project/common/dal/mysql"
 	"fmt"
 	"os"
 	"strconv"
 	"strings"
-
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 
 	//pb "go_tiktok_project/idl/pb"
@@ -46,7 +43,7 @@ func GetUserVideo(ctx context.Context, c *app.RequestContext) {
 	video_user_id, err := strconv.ParseInt(user, 10, 64)
 	if err != nil {
 		logs.Errorf("转换user_id为int失败, error: " + err.Error())
-		c.JSON(400,  utils.H{
+		c.JSON(400, utils.H{
 			"status_code": 1,
 			"status_msg":  "获得用户发布视频失败",
 			"video_list":  nil,
@@ -58,26 +55,26 @@ func GetUserVideo(ctx context.Context, c *app.RequestContext) {
 	token_user_id, err := strconv.ParseInt(token, 10, 64)
 	if err != nil {
 		logs.Errorf("转换token为int失败, error: " + err.Error())
-		c.JSON(400,  utils.H{
+		c.JSON(400, utils.H{
 			"status_code": 1,
 			"status_msg":  "获得用户发布视频失败",
 			"video_list":  nil,
 		})
 		return
 	}
-	
+
 	// // //鉴权token
 	// mysql.InitDB()
 	// video_list, err := mysql.FindIDinVideo(b)
-	video_list, err := service.GetUserVideo(video_user_id,token_user_id)
+	video_list, err := service.GetUserVideo(video_user_id, token_user_id)
 	if err != nil {
 		logs.Errorf("service err, error: " + err.Error())
-		c.JSON(400,  utils.H{
-				"status_code": 1,
-				"status_msg":  "获得用户发布视频失败",
-				"video_list":  nil,
-			})
-		return 
+		c.JSON(400, utils.H{
+			"status_code": 1,
+			"status_msg":  "获得用户发布视频失败",
+			"video_list":  nil,
+		})
+		return
 	}
 	// video_list1,_:=json.Marshal(&video_list)
 	// logs.Info("resp:", string(video_list1))
@@ -114,13 +111,13 @@ func PostUserVideo(ctx context.Context, c *app.RequestContext) {
 	// 	})
 	// 	return
 	// }
-	
+
 	user_id, err := strconv.ParseInt(token, 10, 64)
 	if err != nil {
 		//logs.Errorf("转化user_id为int失败, error: "+ err)
 		c.JSON(400, utils.H{
 			"status_code": 1,
-			"status_msg":  "发布视频失败",
+			"status_msg":  "1发布视频失败",
 		})
 		return
 	}
@@ -145,11 +142,11 @@ func PostUserVideo(ctx context.Context, c *app.RequestContext) {
 		panic(err)
 		c.JSON(400, utils.H{
 			"status_code": 1,
-			"status_msg":  "发布视频失败",
+			"status_msg":  "2发布视频失败",
 		})
 		return
 	}
-	
+
 	logs.Info("file: %s", data.Filename)
 	filename := filepath.Base(data.Filename)
 	fileInfo := strings.Split(filename, ".")
@@ -164,7 +161,7 @@ func PostUserVideo(ctx context.Context, c *app.RequestContext) {
 		logs.Errorf("os stat %s error......%s", filedir, erByStat.Error())
 		c.JSON(400, utils.H{
 			"status_code": 1,
-			"status_msg":  "发布视频失败",
+			"status_msg":  "3发布视频失败",
 		})
 		return
 	}
@@ -174,10 +171,10 @@ func PostUserVideo(ctx context.Context, c *app.RequestContext) {
 		logs.Info("%s is not exist", erByStat.Error())
 		err := os.MkdirAll(filedir, 0777)
 		if err != nil {
-			logs.Error("创建文件夹错误 , error:"+ err.Error())
+			logs.Error("创建文件夹错误 , error:" + err.Error())
 			c.JSON(400, utils.H{
 				"status_code": 1,
-				"status_msg":  "发布视频失败",
+				"status_msg":  "4发布视频失败",
 			})
 			return
 		} else {
@@ -190,10 +187,10 @@ func PostUserVideo(ctx context.Context, c *app.RequestContext) {
 	logs.Info("filepath: %s", saveFile)
 	logs.Info("filepath: %T", saveFile)
 	if err := c.SaveUploadedFile(data, saveFile); err != nil {
-		logs.Error("保存视频失败,error:"+ err.Error())
+		logs.Error("保存视频失败,error:" + err.Error())
 		c.JSON(400, utils.H{
 			"status_code": 1,
-			"status_msg":  "发布视频失败",
+			"status_msg":  "5发布视频失败",
 		})
 		return
 	}
@@ -203,7 +200,7 @@ func PostUserVideo(ctx context.Context, c *app.RequestContext) {
 		logs.Error("server error,error :", err_service.Error())
 		c.JSON(400, utils.H{
 			"status_code": 1,
-			"status_msg":  "发布视频失败",
+			"status_msg":  "6发布视频失败",
 		})
 		return
 	}
@@ -214,16 +211,3 @@ func PostUserVideo(ctx context.Context, c *app.RequestContext) {
 	})
 }
 
-// func PersonBind(ctx context.Context, c *app.RequestContext) {
-// 	type user struct {
-// 		user_id int `query:"user_id" json:"user_id"` // 从路径中获取参数
-// 		token   int `query:"token" json:"token"` // 从query中获取参数
-// 	}
-// 	var p user
-// 	if err := c.BindAndValidate(&p); err != nil {
-// 		panic(err)
-// 	}
-// 	c.JSON(200, utils.H{
-// 		"user": p,
-// 	})
-// }
