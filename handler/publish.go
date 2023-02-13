@@ -9,23 +9,18 @@ import (
 	"strconv"
 	"strings"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
-
 	//pb "go_tiktok_project/idl/pb"
 	"go_tiktok_project/service"
-
 	"path/filepath"
-
 	"github.com/cloudwego/hertz/cmd/hz/util/logs"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/utils"
 )
 
-// // Ping .
+// 获得发布列表
 func GetUserVideo(ctx context.Context, c *app.RequestContext) {
 	path := c.Request.Path()
 	logs.Info("req path: %s", path)
-	// logs.Info("ctx: %s", ctx)
-	// logs.Info("c: %s", c)
 
 	// req := new(pb.DouyinUserRequest)
 	// if err := c.BindAndValidate(&req); err != nil {
@@ -34,12 +29,15 @@ func GetUserVideo(ctx context.Context, c *app.RequestContext) {
 	// 	return
 	// }
 	// logs.Info("req: %s", req)
-
+	//获取参数
 	user := c.Query("user_id")
 	logs.Info("user_id: %s", user)
 	token := c.Query("token")
 	logs.Info("token: %s", token)
 
+	// 鉴权token
+	// mysql.InitDB()
+	// video_list, err := mysql.FindIDinVideo(b)
 	video_user_id, err := strconv.ParseInt(user, 10, 64)
 	if err != nil {
 		logs.Errorf("转换user_id为int失败, error: " + err.Error())
@@ -50,7 +48,6 @@ func GetUserVideo(ctx context.Context, c *app.RequestContext) {
 		})
 		return
 	}
-	logs.Info("video_user_id: %T", video_user_id)
 
 	token_user_id, err := strconv.ParseInt(token, 10, 64)
 	if err != nil {
@@ -63,9 +60,10 @@ func GetUserVideo(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	// // //鉴权token
+	// 鉴权token
 	// mysql.InitDB()
 	// video_list, err := mysql.FindIDinVideo(b)
+	//获取用户发布列表
 	video_list, err := service.GetUserVideo(video_user_id, token_user_id)
 	if err != nil {
 		logs.Errorf("service err, error: " + err.Error())
@@ -76,32 +74,17 @@ func GetUserVideo(ctx context.Context, c *app.RequestContext) {
 		})
 		return
 	}
-	// video_list1,_:=json.Marshal(&video_list)
-	// logs.Info("resp:", string(video_list1))
 
-	//user_id := c.user_id
-
-	//logs.Info("user_id:%s", user_id)
-	// req := new(pb.DouyinUserRequest)
-	// if err := c.BindAndValidate(&req); err != nil {
-	// 	c.String(400, err.Error())
-	// 	return
-	// }
-	// c.JSON(consts.StatusOK, utils.H{
-	// 	"status_code": 0,
-	// 	"status_msg":  "获得用户发布列表",
-	// 	"video_list":  string(video_list1),
-	// })
+	//返回respose
 	c.JSON(consts.StatusOK, video_list)
 }
 
+// 用户视频投稿
 func PostUserVideo(ctx context.Context, c *app.RequestContext) {
 	path := c.Request.Path()
 	logs.Info("req path: %s", path)
 
-	// data1, _ := ioutil.ReadAll(c.Request.Body)
-	// fmt.Printf("ctx.Request.body: %v", string(data1))
-
+	//获取post信息
 	token, _ := c.GetPostForm("token") //认为是user_id
 	// if err != nil {
 	// 	logs.Error("获得token失败, error: " + err)
@@ -111,7 +94,6 @@ func PostUserVideo(ctx context.Context, c *app.RequestContext) {
 	// 	})
 	// 	return
 	// }
-
 	user_id, err := strconv.ParseInt(token, 10, 64)
 	if err != nil {
 		//logs.Errorf("转化user_id为int失败, error: "+ err)
@@ -121,21 +103,10 @@ func PostUserVideo(ctx context.Context, c *app.RequestContext) {
 		})
 		return
 	}
-	logs.Info("user_id: %T", user_id)
+	logs.Info("user_id: %s", user_id)
 
 	title, _ := c.GetPostForm("title")
-	logs.Info("title: %T", title)
-	// if err != nil {
-	// 	//logs.Errorf("获得title失败, error: " + err)
-	// 	c.JSON(400, utils.H{
-	// 		"status_code": 1,
-	// 		"status_msg":  "发布视频失败",
-	// 	})
-	// 	return
-	// }
-	// data := c.Query("data")
-	// logs.Info("data: %s", data)
-	// logs.Info("data: %T", data)
+	logs.Info("title: %s", title)
 
 	data, err := c.FormFile("data")
 	if err != nil {
@@ -147,15 +118,16 @@ func PostUserVideo(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	logs.Info("file: %s", data.Filename)
+	//利用文件名获得文件信息和文件路径
 	filename := filepath.Base(data.Filename)
 	fileInfo := strings.Split(filename, ".")
 	filedir := fileInfo[0]
-	logs.Info("file: %s", filedir)
 	filedata := fmt.Sprintf("uesr:%d  video:%s", user_id, filename)
 	filedir = fmt.Sprintf("./video_data/%s/%s", token, filedir)
-	logs.Info("file: %s", filedir)
+	logs.Info("file: %s", data.Filename)
+	logs.Info("filedir: %s", filedir)
 
+	//创建存储文件夹
 	_, erByStat := os.Stat(filedir)
 	if erByStat != nil {
 		logs.Errorf("os stat %s error......%s", filedir, erByStat.Error())
@@ -181,11 +153,10 @@ func PostUserVideo(ctx context.Context, c *app.RequestContext) {
 			logs.Info("Create dir %s success!", filedir)
 		}
 	}
-	//finalName := fmt.Sprintf("%s.%s", filedir, filetype)
-	saveFile := filepath.Join(filedir, filename)
 
+	//保存视频文件
+	saveFile := filepath.Join(filedir, filename)
 	logs.Info("filepath: %s", saveFile)
-	logs.Info("filepath: %T", saveFile)
 	if err := c.SaveUploadedFile(data, saveFile); err != nil {
 		logs.Error("保存视频失败,error:" + err.Error())
 		c.JSON(400, utils.H{
@@ -195,6 +166,7 @@ func PostUserVideo(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
+	//service 保存视频数据到数据库
 	err_service := service.PostUserVideo(user_id, title, saveFile, filedata)
 	if err_service != nil {
 		logs.Error("server error,error :", err_service.Error())
@@ -205,9 +177,9 @@ func PostUserVideo(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
+	//返回参数
 	c.JSON(consts.StatusOK, utils.H{
 		"status_code": 0,
 		"status_msg":  "发布视频成功",
 	})
 }
-

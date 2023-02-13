@@ -16,7 +16,7 @@ func TestGetUserVideo(t *testing.T) {
 
 func TestPostUserVideo(t *testing.T) {
 
-	err := PostUserVideo(123,"11","\\11","")
+	err := PostUserVideo(123,"11","..//video_data//111//2_2549243961211321131//2_2549243961211321131.mp4","")
 	assert.NoError(t, err)
 	
 }
