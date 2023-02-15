@@ -1,9 +1,15 @@
 package mysql
 
 import (
+<<<<<<< HEAD
 	//"github.com/cloudwego/hertz/cmd/hz/util/logs"
 	"github.com/stretchr/testify/assert"
 	"testing"
+=======
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+>>>>>>> f3bcb08 (publish完成)
 )
 
 func TestDatabaseOp(t *testing.T) {
@@ -15,6 +21,7 @@ func TestDatabaseOp(t *testing.T) {
 	del := DelLike(id)
 	assert.Nil(t, del)
 }
+<<<<<<< HEAD
 
 func TestData(t *testing.T) {
 	//defer logs.Flush()
@@ -25,3 +32,5 @@ func TestData(t *testing.T) {
 	// assert.NoError(t, err)
 	// print(id)
 }
+=======
+>>>>>>> f3bcb08 (publish完成)

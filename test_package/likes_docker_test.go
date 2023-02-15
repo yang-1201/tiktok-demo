@@ -2,17 +2,29 @@ package testpackage
 
 import (
 	"fmt"
+<<<<<<< HEAD
 	"github.com/cloudwego/hertz/cmd/hz/util/logs"
 	"github.com/stretchr/testify/assert"
 	"go_tiktok_project/common/dal/mysql"
 	"testing"
+=======
+	"go_tiktok_project/common/dal/mysql"
+	"testing"
+
+	"github.com/cloudwego/hertz/cmd/hz/util/logs"
+	"github.com/stretchr/testify/assert"
+>>>>>>> f3bcb08 (publish完成)
 )
 
 func TestLikesInsert(t *testing.T) {
 	defer logs.Flush()
 	mysql.InitDB()
 	//插入数据key_id=123 owner_id=321 video_id=111
+<<<<<<< HEAD
 	err := mysql.CreateLike(1234, 321, 111)
+=======
+	err := mysql.CreateLike(124, 321, 111)
+>>>>>>> f3bcb08 (publish完成)
 	assert.NoError(t, err)
 	logs.Infof("test Likes Insert")
 }

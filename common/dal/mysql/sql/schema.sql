@@ -1,6 +1,7 @@
 CREATE TABLE `test_user` (
     `id` bigint unsigned NOT NULL COMMENT 'id',
     PRIMARY KEY (`id`)
+<<<<<<< HEAD
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT= 'user';
 
 CREATE TABLE `users` (
@@ -33,3 +34,6 @@ CREATE TABLE `videos` (
   `abstract` longtext,
   PRIMARY KEY (`video_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='videos';
+=======
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT= 'user'
+>>>>>>> f3bcb08 (publish完成)

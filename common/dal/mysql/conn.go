@@ -17,9 +17,13 @@ func NewDB() *gorm.DB {
 }
 
 func InitDB() {
+<<<<<<< HEAD
 	//dsn := "MiniTikTok:root@tcp(49.232.155.203:3306)/minitiktok?charset=utf8&parseTime=True&loc=Local&timeout=10s"
 	dsn := "root:@tcp(127.0.0.1:3303)/tiktok?charset=utf8&parseTime=True&loc=Local&timeout=100s"
 	//dsn := "root:@tcp(host.docker.internal:3303)/tiktok?charset=utf8&parseTime=True&loc=Local&timeout=100s"
+=======
+	dsn := "MiniTikTok:root@tcp(49.232.155.203:3306)/minitiktok?charset=utf8&parseTime=True&loc=Local&timeout=10s"
+>>>>>>> f3bcb08 (publish完成)
 	//dsn := "root:yy6364650@tcp(localhost:3306)/minitiktok?charset=utf8&parseTime=True&loc=Local&timeout=10s"
 	InitDBWithDSN(dsn)
 }

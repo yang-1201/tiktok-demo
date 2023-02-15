@@ -1,6 +1,7 @@
 package mysql
 
 import (
+<<<<<<< HEAD
 	"github.com/cloudwego/hertz/cmd/hz/util/logs"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -9,6 +10,21 @@ import (
 func TestFindVideoListinVideo(t *testing.T) {
 	InitDB()
 	list, err := FindVideoListinVideo(123)
+=======
+	"testing"
+
+	"github.com/cloudwego/hertz/cmd/hz/util/logs"
+	"github.com/stretchr/testify/assert"
+)
+
+func TestInitDB(t *testing.T) {
+	InitDB()
+}
+
+func TestFindVideoListinVideo(t *testing.T) {
+	InitDB()
+	list, err := FindVideoListinVideo(111)
+>>>>>>> f3bcb08 (publish完成)
 	assert.NoError(t, err)
 	logs.Info("list: %s", list)
 }
@@ -29,7 +45,11 @@ func TestFindIDinLike(t *testing.T) {
 
 func TestCreateVideo(t *testing.T) {
 	InitDB()
+<<<<<<< HEAD
 	err := CreateVideo(555, 111, "11", "11", 1, 2, "11", "11")
+=======
+	err := CreateVideo(554, 111, "11", "11", 1, 2, "11", "11")
+>>>>>>> f3bcb08 (publish完成)
 	assert.NoError(t, err)
 
 }

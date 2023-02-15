@@ -12,6 +12,10 @@ const (
 
 type UserInfo struct {
 	Username string
+<<<<<<< HEAD
+=======
+	UserID   int64
+>>>>>>> f3bcb08 (publish完成)
 }
 
 func GetAuthUserInfo(c *app.RequestContext) (*UserInfo, error) {
